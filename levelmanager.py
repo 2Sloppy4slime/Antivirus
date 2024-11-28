@@ -24,7 +24,7 @@ def load(id: int, grille : entities.Grille):
             #virus
             entitylist.append(entities.Virus((2,1),grille))
             #autres pièces
-            entitylist.append(entities.Diagonale((4,1),3,grille,True))
+            entitylist.append(entities.Diagonale((4,1),3,grille,"down"))
             
             #return
             return entitylist
@@ -37,12 +37,12 @@ def load(id: int, grille : entities.Grille):
             #virus
             entitylist.append(entities.Virus((3,2),grille))
             #autres pièces
-            entitylist.append(entities.Verticale((4,4),3,grille))
+            entitylist.append(entities.Droite((4,4),3,grille))
             entitylist.append(entities.Fleche((2,0),4,grille))
             
             #return
             return entitylist
-        case _ : 
+        case 52 : 
             #murs
             grille.stateSet(1,(2,1))
             #virus
@@ -52,4 +52,7 @@ def load(id: int, grille : entities.Grille):
             entitylist.append(entities.Fleche((5,1),4,grille))
             #return
             return entitylist
+
+        case _ :
+            print("invalid level ID found. Standby mode")
             

@@ -4,8 +4,28 @@ import entities
 import draw
 import levelmanager
 
+pygame.init()
+binds = open("keybinds.opt","r")
+lines  = binds.readlines()
+binds.close()
+
+lines.pop(8)
+lines.pop(6)
+lines.pop(4)
+lines.pop(2)
+lines.pop(0)
+nulines = []
+for i in lines:
+    if len(i) > 1:
+        nulines.append(i[0])
+    else : nulines.append(i)
 
 
+UpLeft = pygame.key.key_code(nulines[0])
+UpRight = pygame.key.key_code(nulines[1])
+DownRight = pygame.key.key_code(nulines[2])
+DownLeft = pygame.key.key_code(nulines[3])
+Selector = pygame.key.key_code(nulines[4])
 
 
 def main() -> None:
@@ -46,6 +66,7 @@ def main() -> None:
     
 
     while running:
+        
         if gameState == 1:
             if levelloaded == False:
                 currentlevel = currentlevel + 50 * difficultymultiplier
@@ -56,13 +77,13 @@ def main() -> None:
             for event in pygame.event.get():
                 
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_f: #changer l'index de mouvement
+                    if event.key == Selector: #changer l'index de mouvement
                         if selectIndex + 1< len(entitylist) :
                             selectIndex += 1
                         else :selectIndex = 0
                         
                         #mouvement horizontal
-                    if event.key == pygame.K_e:
+                    if event.key == UpLeft:
                         
                         entitylist[selectIndex].mvtHorizontal(-1,grille,entitylist)
                         if grille.exit[0] == 1: #gagné
@@ -71,16 +92,16 @@ def main() -> None:
                             
 
 
-                    if event.key == pygame.K_b:
+                    if event.key == DownLeft:
                         entitylist[selectIndex].mvtHorizontal(1,grille,entitylist)
 
 
 
                         #mouvement vertical
-                    if event.key == pygame.K_c:
+                    if event.key == DownRight:
                         entitylist[selectIndex].mvtVertical(1,grille,entitylist)
                     
-                    if event.key == pygame.K_t:
+                    if event.key == UpRight:
                         entitylist[selectIndex].mvtVertical(-1,grille,entitylist)
 
                     

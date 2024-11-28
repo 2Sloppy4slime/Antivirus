@@ -38,11 +38,11 @@ def main() -> None:
     icon = pygame.image.load("icon.png").convert_alpha()
     pygame.display.set_icon(icon)
 
-    menubg = pygame.image.load("menubg.png")
-    diffbg = pygame.image.load("menubg2.png")
-    bg = pygame.image.load("gamebg.png")
-    vignette = pygame.image.load("vignette.png").convert_alpha()
-    win = pygame.image.load("win.png").convert_alpha()
+    menubg = pygame.image.load("GFX\menubg.png")
+    diffbg = pygame.image.load("GFX\menubg2.png")
+    bg = pygame.image.load("GFX\gamebg.png")
+    vignette = pygame.image.load("GFX\ignette.png").convert_alpha()
+    win = pygame.image.load("GFX\win.png").convert_alpha()
 
 
     running = True

@@ -4,7 +4,7 @@ Small school project game
 VERSION TNSI2024 20/11/2024
 
 **requirements :**
--pygame
+-pygame 2.6.1 (I think version is correct)
 
 **instructions:**
 -launch main.py
@@ -21,10 +21,5 @@ VERSION TNSI2024 20/11/2024
 **-C** : move down-left
 
 **-B** : move down-right
-
-visualisation:
-E   T
-  F
-C   B
 
 **-esc** : back to main menu

@@ -35,7 +35,7 @@ def main() -> None:
     screen = pygame.display.set_mode(screensize)
     clock = pygame.time.Clock()
     pygame.display.set_caption("[A N T I V I R U S]","[AV]")
-    icon = pygame.image.load("icon.png").convert_alpha()
+    icon = pygame.image.load("GFX\icon.png").convert_alpha()
     pygame.display.set_icon(icon)
 
     menubg = pygame.image.load("GFX\menubg.png")

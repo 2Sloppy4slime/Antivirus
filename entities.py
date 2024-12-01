@@ -88,8 +88,8 @@ class Piece(): #Objet de base pour tout GameObject qui bouge
     
 
     def mvtHorizontal(self,amount,surface : Grille, entitylist): #horizontal par rapport au losange au dessus donc dans ce sens là : "\" pour la grille graphique
-        snd_moved = pygame.mixer.Sound("canmove.mp3")
-        snd_stopped = pygame.mixer.Sound("cantmove.mp3")
+        snd_moved = pygame.mixer.Sound("SND\canmove.mp3")
+        snd_stopped = pygame.mixer.Sound("SND\cantmove.mp3")
         collision = False  
         collidedindex = 0
         for i in self.points :

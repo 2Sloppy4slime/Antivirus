@@ -8,7 +8,7 @@ def drawGrid(surface):
     currentx = margin
     offsetx = 0
     offsety = 0
-    fond = pygame.image.load("point_vide.png")
+    fond = pygame.image.load("GFX\point_vide.png")
     for x in range(4):
 
         for y in range(4):
@@ -177,14 +177,14 @@ def getpusscolor(num):
     match num: # on assume que le nombre maximal de pièces est 9
 
         case 1:
-            return pygame.image.load("py_gray.png")
+            return pygame.image.load("GFX\py_gray.png")
         case 2:
-            return pygame.image.load("py_red.png")
+            return pygame.image.load("GFX\py_red.png")
         case 3:
-            return pygame.image.load("py_yellow.png")
+            return pygame.image.load("GFX\py_yellow.png")
         case 4:
-            return  pygame.image.load("py_green.png")
+            return  pygame.image.load("GFX\py_green.png")
         case _:
-            return pygame.image.load("py_green.png")
+            return pygame.image.load("GFX\py_green.png")
                         
     

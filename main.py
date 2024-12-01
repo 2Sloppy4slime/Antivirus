@@ -85,18 +85,15 @@ def main() -> None:
                         #mouvement horizontal
                     if event.key == UpLeft:
                         
-                        entitylist[selectIndex].mvtHorizontal(-1,grille,entitylist)
+                        entitylist[selectIndex].mvtHorizontal(-1,grille,entitylist) #win
                         if grille.exit[0] == 1: #gagné
                             screen.blit(win, (0, 0))
                             gameState = 2
-                            
+            
 
 
                     if event.key == DownLeft:
                         entitylist[selectIndex].mvtHorizontal(1,grille,entitylist)
-
-
-
                         #mouvement vertical
                     if event.key == DownRight:
                         entitylist[selectIndex].mvtVertical(1,grille,entitylist)

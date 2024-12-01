@@ -10,6 +10,7 @@ VERSION TNSI2024 20/11/2024
 -launch main.py
 
 **inputs :**
+
 --Inputs Can Now be Changed with the .opt file (open with notebook)--
 
 **-F** : Select another molecule

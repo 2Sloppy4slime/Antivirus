@@ -1,7 +1,7 @@
 # Antivirus
 Small school project game
 
-VERSION TNSI2024 20/11/2024
+VERSION 1/12/2024
 
 **requirements :**
 -pygame 2.6.1 (I think version is correct)

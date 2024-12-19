@@ -117,7 +117,7 @@ class Piece(): #Objet de base pour tout GameObject qui bouge
 
         
         if collision == True:
-            print("yeag")
+            
             entitylist[collidedindex -2].mvtHorizontal(amount,surface,entitylist)
 
         if amount > 0 : 
@@ -138,6 +138,8 @@ class Piece(): #Objet de base pour tout GameObject qui bouge
 
         self.points = sorted(self.points)
 
+
+    #check for if movement is possible without collision checking
     def checkMvtHorizontal(self,amount, surface : Grille,entitylist):
         for i in self.points :
                 try:
@@ -160,6 +162,7 @@ class Piece(): #Objet de base pour tout GameObject qui bouge
         collision = False
         collidedindex = 0
         #on vérifie si le mouvement est possible
+        #we check if movement is possible
         for i in self.points:
             try:
                     
@@ -173,36 +176,36 @@ class Piece(): #Objet de base pour tout GameObject qui bouge
                     test = i[1] +sens
                     
                     
-                    if test < 0 :
-                        print("invalide position checked")
+                    if test < 0 : #happens if position doesn't exist
+                        print("invalid position checked")
                         raise IndexError("invalid conversion")                    
                     
                     test = surface.stateOf((i[0]+ 1*amount ,i[1] +sens))
-                    if test > 1 and test != self.index :
+                    if test > 1 and test != self.index : #happens when collision
                         collision = True
                         collidedindex = test
                         print("collided with : ", test)
 
-                    if test == 0 or test == self.index:
-                        
+                    if test == 0 or test == self.index: #if position is empty or itself
                         pass
 
-                    else:    
+                    else:    #don't move
                         if collision == True and entitylist[collidedindex -2].checkMvtVertical(amount,surface,entitylist) == False:
                             raise IndexError("tried to move nowhere")
                         if collision == False:
                             
                             raise IndexError("tried to move nowhere")
             except : 
-                print("can't move" )
+                
                 return
                 
             else : pass
         
-        if collision:
+        if collision: #does collision movement :)
             entitylist[collidedindex -2].mvtVertical(amount,surface,entitylist)
 
         #on trie dans le bon sens pour eviter de déplacer un point sur un autre de lui même
+        #we sort in the right direction to avoid moving a point over another point of it's own piece
         if amount > 0 : 
             self.points = sorted(self.points,reverse=True)
 
@@ -212,12 +215,14 @@ class Piece(): #Objet de base pour tout GameObject qui bouge
         for i in self.points : 
                 
                 #on doit faire +1 sur l'index quand on est sur une ligne en dessous de 4 pour un mouvement correct
+                #we do +1 on the index where on a line under 4 for correct movement
                 sens = 1 * amount
                 if i[0] > 4: 
                     sens = -1 * amount
                 elif i[0] == 4:
                     sens = -1
                 #on déplace tout les points sur la grille et dans l'objet
+                #we move all the points on the grid and in it's object
     
                 if surface.stateOf((i[0] + 1*amount ,i[1] +sens )) == 0:
                     self.points[it] = (i[0] + 1*amount , i[1] +sens)
@@ -229,7 +234,11 @@ class Piece(): #Objet de base pour tout GameObject qui bouge
                     return 
 
         self.points = sorted(self.points)
+
+
+
     
+    #check for if movement is possible without collision checking
     def checkMvtVertical(self,amount,surface,entitylist):
         for i in self.points:
             try:
@@ -242,7 +251,7 @@ class Piece(): #Objet de base pour tout GameObject qui bouge
                     test = i[1] +sens
 
                     if test < 0 :
-                        print("invalide position checked")
+                        print("invalid position checked")
                         raise IndexError("invalid conversion")                    
                     
                     test = surface.stateOf((i[0]+ 1*amount ,i[1] +sens))
@@ -297,14 +306,14 @@ class Virus(Piece):
 #here we define our building pieces : 
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-#tired of translating this just read the schematics and the names
+#tired of translating this just read the schematics and the names, you'll learn some french if you can pattern match
 
 # on a donc:
 #
 # ---- diagonale ----
 # 
 # schéma : 
-#
+# up/left   down/right
 #   0        0
 #    0  ou  0
 #
@@ -312,6 +321,7 @@ class Virus(Piece):
 class Diagonale(Piece) :
     def __init__(self, pos, index, surface: Grille,rotation = "up") -> None:
         super().__init__(pos, index, surface,rotation)
+
         if self.rotation == "up" or self.rotation == "left":
             self.points.append((pos[0],pos[1]+1))
         else:
@@ -326,17 +336,18 @@ class Diagonale(Piece) :
 
 
 #
-# ---- droite/straight ----
+# ---- droite/straight ---- (techniquement pas une droite mais nomenclature j'aime blabla)
 # 
 # schéma : 
-#
-#   0   ou  0  0
+# up/down   left/right
+#   0    ou   0 0
 #   0
 
 
 class Droite(Piece):
     def __init__(self, pos, index, surface: Grille,rotation = "up") -> None:
         super().__init__(pos, index, surface,rotation)
+
         if self.rotation == "up" or self.rotation == "down":
             
             if self.points[0][0] >= 4:
@@ -344,7 +355,7 @@ class Droite(Piece):
 
             else:
                 self.points.append((self.points[0][0] +1 , self.points[0][1] + 2))
-        else:
+        else: #so rotation = "left" or "right"
             if self.points[0][0] > 4:
                 self.points.append((self.points[0][0] -1 , self.points[0][1] + 2))
             
@@ -359,37 +370,75 @@ class Droite(Piece):
 
 
 #
-# ---- Coin ----
+# ---- Coin/Corner ----
 # 
 # schéma : 
-#
-#   0 0     ou      0 0
-#     0             0
+#   up              right          down          left
+#   0 0     ou      0 0      ou    0      ou       0
+#     0             0              0 0           0 0
 
 
 class Coin(Piece):
-    def __init__(self, pos, index, surface: Grille,reverse = False) -> None:
+    def __init__(self, pos, index, surface: Grille,rotation = "up") -> None:
         super().__init__(pos, index, surface)
-        if reverse == False:
-            if self.points[0][0] > 4:
-                self.points.append((self.points[0][0]  , self.points[0][1] +2))
-                self.points.append((self.points[0][0] -1 , self.points[0][1] + 2))
+
+        match rotation :
+            case "up":
+                if self.points[0][0] > 4:
+                    self.points.append((self.points[0][0]  , self.points[0][1] +2))
+                    self.points.append((self.points[0][0] -1 , self.points[0][1] + 2))
+                
+                else:
+                    self.points.append((self.points[0][0] -1 , self.points[0][1]))
+                    self.points.append((self.points[0][0] , self.points[0][1] + 2))
+
+
+
+            case "right":
+                if self.points[0][0] > 4:
+                    self.points.append((self.points[0][0] +1 , self.points[0][1] ))
+                    self.points.append((self.points[0][0] -1 , self.points[0][1] + 2))
+                
+                elif self.points[0][0] == 4:
+                    self.points.append((self.points[0][0] +1, self.points[0][1] ))
+                    self.points.append((self.points[0][0] -1 , self.points[0][1]))
+                    
+                
+                else : 
+                    self.points.append((self.points[0][0] +1, self.points[0][1] + 2))
+                    self.points.append((self.points[0][0] -1 , self.points[0][1]))
+                    
             
-            else:
-                self.points.append((self.points[0][0] -1 , self.points[0][1]))
-                self.points.append((self.points[0][0] , self.points[0][1] + 2))
-        else:
-            if self.points[0][0] > 4:
-                self.points.append((self.points[0][0] +1 , self.points[0][1] ))
-                self.points.append((self.points[0][0] -1 , self.points[0][1] + 2))
+
+            case "down":
+                if self.points[0][0] > 4:
+                    self.points.append((self.points[0][0] +1 , self.points[0][1] ))
+                    self.points.append((self.points[0][0] , self.points[0][1] + 2))
+                
+                elif self.points[0][0] == 4:
+                    self.points.append((self.points[0][0] +1 , self.points[0][1] ))
+                    self.points.append((self.points[0][0]  , self.points[0][1] + 2))
+                    
+                
+                else : 
+                    self.points.append((self.points[0][0] +1 , self.points[0][1] + 2))
+                    self.points.append((self.points[0][0] , self.points[0][1] + 2))
+                    
             
-            elif self.points[0][0] == 4:
-                self.points.append((self.points[0][0] -1 , self.points[0][1]))
-                self.points.append((self.points[0][0] +1, self.points[0][1] ))
-            
-            else : 
-                self.points.append((self.points[0][0] -1 , self.points[0][1]))
-                self.points.append((self.points[0][0] +1, self.points[0][1] + 2))
+
+            case "left":
+                if self.points[0][0] > 4:
+                    self.points.append((self.points[0][0] +1 , self.points[0][1] ))
+                    self.points.append((self.points[0][0] +2 , self.points[0][1] -2))
+                
+                elif self.points[0][0] == 4:
+                    self.points.append((self.points[0][0] +1, self.points[0][1] ))
+                    self.points.append((self.points[0][0] +2 , self.points[0][1] -2))
+                    
+                
+                else : 
+                    self.points.append((self.points[0][0] +1, self.points[0][1] + 2))
+                    self.points.append((self.points[0][0] +2 , self.points[0][1]))
 
         self.sortValues()
         for i in self.points:
@@ -399,60 +448,73 @@ class Coin(Piece):
 # ---- Long ----
 # 
 # schéma : 
-#
-#   0 0 0  
-#     
+#                0
+#   0 0 0  ou    0
+#                0
 
 class Long(Piece):
-    def __init__(self, pos, index, surface: Grille) -> None:
+    def __init__(self, pos, index, surface: Grille, rotation = "left") -> None:
         super().__init__(pos, index, surface)
 
-        if self.points[0][0] > 5:
-            self.points.append((self.points[0][0] -1 , self.points[0][1] + 2))
-            self.points.append((self.points[0][0] -2 , self.points[0][1] + 4))
+        match rotation:
+            case "right" | "left" :
+                if self.points[0][0] > 5:
+                    self.points.append((self.points[0][0] -1 , self.points[0][1] + 2))
+                    self.points.append((self.points[0][0] -2 , self.points[0][1] + 4))
 
-        elif self.points[0][0] > 4:
-            self.points.append((self.points[0][0] -1 , self.points[0][1] + 2))
-            self.points.append((self.points[0][0] -2 , self.points[0][1] + 2))
+                elif self.points[0][0] > 4:
+                    self.points.append((self.points[0][0] -1 , self.points[0][1] + 2))
+                    self.points.append((self.points[0][0] -2 , self.points[0][1] + 2))
 
-        
-        else:
-            self.points.append((self.points[0][0] -1 , self.points[0][1]))
-            self.points.append((self.points[0][0] -2 , self.points[0][1]))
+                
+                else:
+                    self.points.append((self.points[0][0] -1 , self.points[0][1]))
+                    self.points.append((self.points[0][0] -2 , self.points[0][1]))
+            
+            case "up" | "down":
+                if self.points[0][0] >= 4:
+                    self.points.append((self.points[0][0] +1 , self.points[0][1]))
+
+                else:
+                    self.points.append((self.points[0][0] +1 , self.points[0][1] + 2))
+
+                if self.points[1][0] >= 4: # we get the third point from the second 
+                    self.points.append((self.points[1][0] +1 , self.points[1][1]))
+
+                else:
+                    self.points.append((self.points[1][0] +1 , self.points[1][1] + 2))
 
         self.sortValues()
         for i in self.points:
             surface.stateSet(self.index,i)
 
 #
-# ---- Crochet ----
+# ---- Crochet/Hook ----
 # 
 # schéma : 
 #
-#   0      0
-#    0 ou 0
-#    0    0
+#   0            0         0          0
+#    0    ou    0     ou   0    ou    0     
+#    0          0         0            0
 #    
 
 class Crochet(Piece):
-    def __init__(self, pos, index, surface: Grille,reverse = False) -> None:
+    def __init__(self, pos, index, surface: Grille, rotation = "up") -> None:
         super().__init__(pos, index, surface)
-        if reverse:
-            if self.points[0][0] < 4:
-                self.points.append((pos[0]+1,pos[1]+1))
-            else: self.points.append((pos[0]+1,pos[1]-1))
 
+        if rotation == "right" or rotation == "up":
+            if rotation == "right": #first piece down (diagonal)
+                if self.points[0][0] < 4:
+                    self.points.append((pos[0]+1,pos[1]+1))
+                else: self.points.append((pos[0]+1,pos[1]-1))
+            else:
+                self.points.append((self.points[0][0], self.points[0][1] + 1))
 
-        else:
-            self.points.append((self.points[0][0], self.points[0][1] + 1))
+            if self.points[1][0] >= 4: #second vertical piece 
+                self.points.append((self.points[1][0] +1 , self.points[1][1]))
 
-
-
-        if self.points[1][0] >= 4:
-            self.points.append((self.points[1][0] +1 , self.points[1][1]))
-
-        else:
-            self.points.append((self.points[1][0] +1 , self.points[1][1] + 2))
+            else:
+                self.points.append((self.points[1][0] +1 , self.points[1][1] + 2))
 
         self.sortValues()
         for i in self.points:
@@ -460,23 +522,25 @@ class Crochet(Piece):
 
 
 #
-# ---- Fleche ----
+# ---- Fleche/Arrow ----
 # 
 # schéma : 
-#
-#   0      
-#  0 0 
+#  up             0            0
+#   0      ou    0      ou      0     ou     0 0
+#  0 0            0            0              0
 #        
 #   
 
 class Fleche(Piece):
-    def __init__(self, pos, index, surface: Grille) -> None:
+    def __init__(self, pos, index, surface: Grille,rotation = "up") -> None:
         super().__init__(pos, index, surface)
-        self.points.append((self.points[0][0], self.points[0][1] + 1))
-        if self.points[0][0] >= 4 :
-            self.points.append((self.points[0][0]+1, self.points[0][1] - 1))
+        match rotation :
+            case "up":
+                self.points.append((self.points[0][0], self.points[0][1] + 1))
+                if self.points[0][0] >= 4 :
+                    self.points.append((self.points[0][0]+1, self.points[0][1] - 1))
 
-        else : self.points.append((self.points[0][0] +1 , self.points[0][1] + 1))
+                else : self.points.append((self.points[0][0] +1 , self.points[0][1] + 1))
 
         self.sortValues()
         for i in self.points:

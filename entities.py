@@ -88,8 +88,8 @@ class Piece(): #Objet de base pour tout GameObject qui bouge
     
 
     def mvtHorizontal(self,amount,surface : Grille, entitylist): #horizontal par rapport au losange au dessus donc dans ce sens là : "\" pour la grille graphique
-        snd_moved = pygame.mixer.Sound("SND\canmove.mp3")
-        snd_stopped = pygame.mixer.Sound("SND\cantmove.mp3")
+        snd_moved = pygame.mixer.Sound(r"SND\canmove.mp3")
+        snd_stopped = pygame.mixer.Sound(r"SND\cantmove.mp3")
         collision = False  
         collidedindex = 0
         for i in self.points :
@@ -466,17 +466,18 @@ class Long(Piece):
                     self.points.append((self.points[0][0] -1 , self.points[0][1] + 2))
                     self.points.append((self.points[0][0] -2 , self.points[0][1] + 2))
 
-                
                 else:
                     self.points.append((self.points[0][0] -1 , self.points[0][1]))
                     self.points.append((self.points[0][0] -2 , self.points[0][1]))
             
+
             case "up" | "down":
                 if self.points[0][0] >= 4:
                     self.points.append((self.points[0][0] +1 , self.points[0][1]))
 
                 else:
                     self.points.append((self.points[0][0] +1 , self.points[0][1] + 2))
+
 
                 if self.points[1][0] >= 4: # we get the third point from the second 
                     self.points.append((self.points[1][0] +1 , self.points[1][1]))
@@ -492,7 +493,7 @@ class Long(Piece):
 # ---- Crochet/Hook ----
 # 
 # schéma : 
-#
+#   up          right   down        left
 #   0            0         0          0
 #    0    ou    0     ou   0    ou    0     
 #    0          0         0            0
@@ -507,14 +508,34 @@ class Crochet(Piece):
                 if self.points[0][0] < 4:
                     self.points.append((pos[0]+1,pos[1]+1))
                 else: self.points.append((pos[0]+1,pos[1]-1))
+
             else:
                 self.points.append((self.points[0][0], self.points[0][1] + 1))
+
 
             if self.points[1][0] >= 4: #second vertical piece 
                 self.points.append((self.points[1][0] +1 , self.points[1][1]))
 
             else:
                 self.points.append((self.points[1][0] +1 , self.points[1][1] + 2))
+
+
+        else: #if rotation = "down" or "left"
+            if self.points[0][0] >= 4: #first vertical piece 
+                self.points.append((self.points[0][0] +1 , self.points[0][1]))
+
+            else:
+                self.points.append((self.points[0][0] +1 , self.points[0][1] + 2))
+
+
+            if rotation == "left": #second piece down (diagonal)
+                if self.points[1][0] < 4:
+                    self.points.append((self.points[1][0] +1 ,self.points[1][1] +1))
+                else: self.points.append((self.points[1][0] +1, self.points[1][1]-1))
+
+            else:
+                self.points.append((self.points[1][0], self.points[1][1] + 1))
+            
 
         self.sortValues()
         for i in self.points:
@@ -524,7 +545,7 @@ class Crochet(Piece):
 #
 # ---- Fleche/Arrow ----
 # 
-# schéma : 
+# schéma :        left         right         down
 #  up             0            0
 #   0      ou    0      ou      0     ou     0 0
 #  0 0            0            0              0
@@ -542,6 +563,21 @@ class Fleche(Piece):
 
                 else : self.points.append((self.points[0][0] +1 , self.points[0][1] + 1))
 
+
+            case "down":
+                self.points.append((self.points[0][0], self.points[0][1] + 1))
+                if self.points[1][0] > 4 :
+                    self.points.append((self.points[1][0]-1, self.points[1][1] +1))
+
+                else : self.points.append((self.points[1][0] -1 , self.points[1][1] - 1))
+
+
+            case "left":
+                pass #tbd
+
+
+            case "right":
+                pass #tbd
         self.sortValues()
         for i in self.points:
             surface.stateSet(self.index,i)

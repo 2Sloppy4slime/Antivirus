@@ -573,11 +573,21 @@ class Fleche(Piece):
 
 
             case "left":
-                pass #tbd
+                if self.points[0][0] >= 4 :
+                    self.points.append((self.points[0][0]+1, self.points[0][1] - 1))
+
+                else : self.points.append((self.points[0][0] +1 , self.points[0][1] + 1))
+                self.points.append((self.points[1][0], self.points[1][1] + 1))
 
 
             case "right":
-                pass #tbd
+                self.points.append((self.points[0][0], self.points[0][1] + 1))
+                if self.points[1][0] >= 4 :
+                    self.points.append((self.points[1][0]+1, self.points[1][1] - 1))
+
+                else : self.points.append((self.points[1][0] +1 , self.points[1][1] + 1))
+
+
         self.sortValues()
         for i in self.points:
             surface.stateSet(self.index,i)

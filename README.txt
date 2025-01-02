@@ -1,31 +1,25 @@
-ANTIVIRUS
+Antivirus
 
-VERSION TNSI2024 19/11/2024
+Small school project game
 
-requirements :
--pygame
+VERSION 1/12/2024
 
-instructions:
--Lancer le fichier main.py
+requirements : -pygame 2.6.1 (I think version is correct)
 
-boutons :
+instructions: -launch main.py
 
--F : sélectionner autre pièce
+inputs :
 
--E : déplacer en haut a gauche
+--Inputs Can Now be Changed with the .opt file (open with notebook)--
 
--T : déplacer en haut a droite
+-F : Select another molecule
 
--C : déplacer en bas a gauche
+-E : move up-left
 
--B : déplacer en bas a droite
+-T : move up-right
 
-visualisation:
-E   T
-  F
-C   B
+-C : move down-left
 
--esc : revenir au menu principal
+-B : move down-right
 
-le deuxième défi :
-	niveau en plus
+-esc : back to main menu
